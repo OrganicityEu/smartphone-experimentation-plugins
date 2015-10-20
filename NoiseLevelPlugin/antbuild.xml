@@ -1,0 +1,26 @@
+<project name="Custom Ant Build">
+	
+    <target name="createJar">
+        <echo message="Creating JAR file... ${timestamp}" />
+    	
+    </target>
+ 
+    <target name="makeDirectory">
+        <echo message="Making dist directory..." />
+    </target>
+    
+    <target name="copyDocument">
+        <echo message="Copying documents..." />
+    </target>  
+ 
+    <target name="zipDist">
+        <echo message="Compressing data..." />
+    </target>
+ 
+    <target name="upload">
+        <echo message="Uploading to FTP server..." />
+    </target>
+    
+    <target name="default" depends="createJar, makeDirectory, copyDocument, zipDist, upload" />
+    
+</project>

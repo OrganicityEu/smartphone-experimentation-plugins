@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: NoiseLevel Plugin
+Bundle-Vendor: Ambient Dynamix
+Bundle-SymbolicName: org.ambientdynamix.contextplugins.NoiseLevelPlugin
+Bundle-Version: 0.9.54
+Bundle-ClassPath: .,lib/gson-2.2.4.jar
+Export-Package: org.ambientdynamix.contextplugins.NoiseLevelPlugin
+Import-Package: org.ambientdynamix.api.application,org.ambientdynamix.api.contextplugin,org.ambientdynamix.api.contextplugin.security
+DynamicImport-Package: *

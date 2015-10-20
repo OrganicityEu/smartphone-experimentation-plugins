@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Open Context Plugin Sdk
+Bundle-SymbolicName: Open_Context_Plugin_Sdk
+Bundle-Version: 0.9.54
+Export-Package: 
+ org.ambientdynamix.api.application,
+ org.ambientdynamix.api.contextplugin,
+ org.ambientdynamix.api.contextplugin.security
+Bundle-ClassPath: .,
+ lib/org.ambientdynamix.contextplugin.api_v0.9.54.jar
+Bundle-Vendor: Ambient Dynamix Project

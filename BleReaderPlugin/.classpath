@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Open Context Plugin Sdk"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
+	<classpathentry kind="lib" path="lib/gson-2.2.4.jar"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="lib" path="/home/amaxilatis/repositories/cti-organicity/AndroidExperimentation/src/sensorPlugins/BleReaderPlugin/lib/org.ambientdynamix.contextplugin.api_v0.9.54.jar"/>
+	<classpathentry kind="lib" path="lib/support-v4-19.1.0.jar"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>
