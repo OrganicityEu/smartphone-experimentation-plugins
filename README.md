@@ -23,3 +23,24 @@ For security reasons access to the Sensor and SensorManager classes is restricte
 
       mSensorManager = (SecuredSensorManager) this.context.getSystemService(Context.SENSOR_SERVICE);
       mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE);
+
+## Generating Sensor Measurements
+
+To generate measurements Sensor Plugins use the internal 'Reading' class. The class contains a 'context' that device the source of the measuremnt, a 'timestamp' that refers to the time instant of the measurement and a 'value' which is the string representation of a map of all the received sensor readings. A measurement can contain multiple sensor measurements like temperature, humidity and atmospheric pressure. All measurements are passed to a PluginInfo that is parsed from the osgi manager.
+
+      //the container of the measurements
+      PluginInfo info = new PluginInfo();
+      //the json object that contains sensor readings
+      JSONObject obj = new JSONObject();
+      //adding all sensor readings to the json object
+      obj.put("org.ambientdynamix.contextplugins.AmbientTemperature", temperature);
+      //creating a Reading and pass it to the PluginInfo object
+      r.add(new Reading(obj.toString(), PluginInfo.CONTEXT_TYPE));
+      info.setPayload(r);
+      info.setState("OK");
+      //send the event to the osgi manager
+      //the last value is the time the measurement is valid for
+      sendContextEvent(requestId, new SecuredContextInfo(info, PrivacyRiskLevel.LOW), 60000);
+      
+      
+
