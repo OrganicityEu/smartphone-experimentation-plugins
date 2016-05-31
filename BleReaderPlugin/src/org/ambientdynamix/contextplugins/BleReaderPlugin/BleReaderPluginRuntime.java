@@ -56,7 +56,7 @@ import java.util.UUID;
 public class BleReaderPluginRuntime extends AutoReactiveContextPluginRuntime {
 
 	private final String TAG = this.getClass().getSimpleName();
-	private static final long SCAN_PERIOD = 3000;
+	private static final long SCAN_PERIOD = 100;
 	private static final long DATA_SCAN_PERIOD = 20000;
 	private Context context;
 	public static double REFERENCE = 0.00002;
@@ -66,8 +66,6 @@ public class BleReaderPluginRuntime extends AutoReactiveContextPluginRuntime {
 	private Handler handler = new Handler();
 	private Map<String, String> values = new HashMap<>();
 	private List<BluetoothDevice> mDevices = new ArrayList<BluetoothDevice>();
-	private List<Map<String, String>> listItems = new ArrayList<Map<String, String>>();
-	private Map<String, String> map = new HashMap<String, String>();
 	private String DEVICE_NAME = "name";
 	private String DEVICE_ADDRESS = "address";
 	private int numDevicesReceive;
@@ -99,27 +97,18 @@ public class BleReaderPluginRuntime extends AutoReactiveContextPluginRuntime {
 		@Override
 		public void run() {
 			if (enabled) {
-				mDevices.clear();
-				listItems.clear();
 				//
 				if (mBluetoothGatt != null) {
+					mDevices.clear();
 					mBluetoothGatt.disconnect();
 					mBluetoothGatt.close();
 					mBluetoothGatt = null;
 				}
-
-				mBluetoothAdapter.startLeScan(mLeScanCallback);
-				try {
-					Thread.sleep(SCAN_PERIOD);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				mBluetoothAdapter.stopLeScan(mLeScanCallback);
 				findDevice();
 
 				Log.d(TAG, "Periodic conection");
 			}
-			// Repeat this runnable code again every 30 seconds
+			// Repeat this runnable code again every DATA_SCAN_PERIOD seconds
 			handler.postDelayed(runnableCode, DATA_SCAN_PERIOD);
 		}
 	};
@@ -199,7 +188,7 @@ public class BleReaderPluginRuntime extends AutoReactiveContextPluginRuntime {
 	public void start() {
 		Log.d(TAG, "BleReader sensor Started!");
 		if (!enabled) {
-			handler.postDelayed(runnableCode, DATA_SCAN_PERIOD);
+			handler.post(runnableCode);
 		}
 		enabled = true;
 	}
@@ -208,12 +197,15 @@ public class BleReaderPluginRuntime extends AutoReactiveContextPluginRuntime {
 	public void stop() {
 		Log.d(TAG, "BleReader sensor Stopped!");
 		enabled = false;
+		handler.removeCallbacks(runnableCode);
 	}
 
 	@Override
 	public void destroy() {
 		this.stop();
 		Log.d(TAG, "BleReader sensor Destroyed!");
+		enabled = false;
+		handler.removeCallbacks(runnableCode);
 	}
 
 	@Override
@@ -278,7 +270,6 @@ public class BleReaderPluginRuntime extends AutoReactiveContextPluginRuntime {
 				} else if (numDevicesReceive == (mDevices.size())) {
 					// all devices are read
 					numDevicesReceive = 0;
-					mDevices.clear();
 					Log.i(TAG, "Read sensors from all BLE devices.");
 				}
 
@@ -346,7 +337,7 @@ public class BleReaderPluginRuntime extends AutoReactiveContextPluginRuntime {
 			} else if (data.charAt(0) == 'G') {
 				// Request a new sensor value
 				requestNewVariable();
-			} 
+			}
 		}
 
 		void requestNewVariable() {
@@ -363,13 +354,26 @@ public class BleReaderPluginRuntime extends AutoReactiveContextPluginRuntime {
 	};
 
 	private void findDevice() {
-
-		Log.d(TAG, "Number of devices:" + String.valueOf(mDevices.size()));
-		if (!mDevices.isEmpty()) {
-			// Make a connection with the first device on the list
-			numDevicesReceive = 0;
-			connectWithDevice(mDevices.get(0));
-		}
+		Timer mTimer = new Timer();
+		mTimer.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				mBluetoothAdapter.startLeScan(mLeScanCallback);
+				try {
+					Thread.sleep(SCAN_PERIOD);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				mBluetoothAdapter.stopLeScan(mLeScanCallback);
+				Log.d(TAG,
+						"Number of devices:" + String.valueOf(mDevices.size()));
+				numDevicesReceive = 0;
+				if (!mDevices.isEmpty()) {
+					// Make a connection with the first device on the list
+					connectWithDevice(mDevices.get(0));
+				}
+			}
+		}, SCAN_PERIOD);
 	}
 
 	/**
