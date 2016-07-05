@@ -1,4 +1,4 @@
-# Android Experimentation Sensor Plugins
+# Smartphone Experimentation Sensor Plugins
 
 In order to access sensors of the Android smartphone experimenters need to implement or use Context Plugins that are executed in the experimenter's smartphones and collect data periodically.
 
